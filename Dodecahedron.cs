@@ -148,7 +148,7 @@ namespace Dodecahedroid
 
             // narrow fieldofview = closer to the object.
             //projection = Matrix4.CreatePerspectiveFieldOfView (MathHelper.DegreesToRadians (7.0f), aspect, 1.0f, 200.0f);
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(7.0f), aspect, 1.0f, 200.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(8.0f), aspect, 1.0f, 200.0f);
             projection = Matrix4.Mult (view, projection);
 			normalMatrix = Matrix4.Invert (view);
 			normalMatrix.Transpose ();

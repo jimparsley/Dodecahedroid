@@ -1,10 +1,7 @@
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\Dodecahedroid.dll
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\Dodecahedroid.pdb
-C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\mono.samples.texturedcube.apk
-C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\mono.samples.texturedcube-Signed.apk
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\Dodecahedroid.dll
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\Dodecahedroid.pdb
-C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\android\bin\mono.samples.texturedcube.apk
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\res\drawable-nodpi\translucent.png
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\res\drawable-nodpi\app_texturedcube.png
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\res\layout\main.xml
@@ -44,5 +41,9 @@ C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\andr
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\android\assets\System.Xml.dll.mdb
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\android\assets\System.Xml.Linq.dll.mdb
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\Dodecahedroid.csprojResolveAssemblyReference.cache
+C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\dodecahedroid.dodecahedroid.apk
+C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\dodecahedroid.dodecahedroid-Signed.apk
+C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\android\bin\dodecahedroid.dodecahedroid.apk
+C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\res\drawable-nodpi\texture_old.png
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\obj\Debug\Dodecahedroid.dll.mdb
 C:\Users\JimM\Documents\Visual Studio 2015\Projects\Dodecahedroid\bin\Debug\Dodecahedroid.dll.mdb

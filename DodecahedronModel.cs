@@ -141,13 +141,13 @@ namespace Dodecahedroid
             // one of pair of opposite pentagons parallel to xy plane
             // 0, 1, 2, 3, 4
             1, 3, 0,
-            0, 3, 4,
             1, 2, 3,
+            0, 3, 4,
 
             // 0, 4, 5, 9, 12
-            0, 4, 12,
-            0, 12, 5,
-            4, 9, 12,
+            4, 12, 0,
+            12, 5, 0,
+            12, 4, 9,
 
             // 3, 4, 8, 9, 11
             3, 11, 4,
@@ -171,7 +171,7 @@ namespace Dodecahedroid
 
 
             // 15, 16, 17, 18, 19
-            16, 15, 18,
+            15, 18, 16,
             15, 19, 18,
             16, 18, 17,
 
@@ -181,24 +181,24 @@ namespace Dodecahedroid
             19, 7, 14,
 
             // 18, 19, 13, 14, 6
-            18, 19, 6,
-            18, 6, 13,
-            19, 14, 6,
+            19, 6, 18,
+            6, 13, 18,
+            6, 19, 14, 
 
             // 17, 18, 12, 13, 5
-            17, 18, 5,
-            17, 5, 12,
-            18, 13, 5,
+            18, 5, 17,
+            5, 12, 17,
+            5, 18, 13, 
 
             // 16, 17, 11, 12, 9
-            16, 17, 9,
-            16, 9, 11,
-            17, 12, 9,
+            17, 9, 16,
+            9, 11, 16,
+            9, 17, 12, 
 
             // 15, 16, 10, 11, 8
-            15, 16, 8,
-            15, 8, 10,
-            16, 11, 8
+            16, 8, 15,
+            8, 10, 15,
+            8, 16, 11
         };
 
         private static float[,] contractionMappings = new float[20, 12]
@@ -236,6 +236,8 @@ namespace Dodecahedroid
             //float factor = 1.618f;
             //float factor = 1f;
 
+            int pentagonSegment = 0;
+
             for (int i=0; i<dodecahedron_faceIndexes_flipped.Length; i+=3)
             {
                 // calc normal
@@ -267,16 +269,61 @@ namespace Dodecahedroid
                 float ny = (uz * vx) - (ux * vz);
                 float nz = (ux * vy) - (uy * vx);
 
+                float texa_x, texa_y, texb_x, texb_y, texc_x, texc_y;
+
+                switch(pentagonSegment)
+                {
+                    case 0:    
+                        texa_x = 1-0.7847f;
+                        texa_y = 1-0.0639f;
+                        texb_x = 1-0.5f;
+                        texb_y = 1-0.9375f;
+                        texc_x = 1-0.2167f;
+                        texc_y = 1-0.0639f;
+                        pentagonSegment = 1;
+                        break;
+
+                    case 1:
+                        texa_x = 1-0.7847f;
+                        texa_y = 1-0.0639f;
+                        texb_x = 1-0.9597f;
+                        texb_y = 1-0.6056f;
+                        texc_x = 1-0.5f;
+                        texc_y = 1-0.9375f;
+                        pentagonSegment = 2;
+                        break;
+
+                    case 2:
+                        texa_x = 1 - 0.2167f;
+                        texa_y = 1 - 0.0639f;
+                        texb_x = 1 - 0.5f;
+                        texb_y = 1 - 0.9375f;
+                        texc_x = 1 - 0.0417f;
+                        texc_y = 1 - 0.6056f;
+                        pentagonSegment = 0;
+                        break;
+
+                    default:
+                        texa_x = 1 - 0.7847f;
+                        texa_y = 1 - 0.0639f;
+                        texb_x = 1 - 0.5f;
+                        texb_y = 1 - 0.9375f;
+                        texc_x = 1 - 0.2167f;
+                        texc_y = 1 - 0.0639f;
+                        pentagonSegment = 1;
+                        break;
+                }
+
                 // append vertices, normals and texcoords to list
-                vertexList.AddRange(new List<float> { ax, ay, az, nx, ny, nz, 0f, 0f });
-                vertexList.AddRange(new List<float> { bx, by, bz, nx, ny, nz, 0f, 1f });
-                vertexList.AddRange(new List<float> { cx, cy, cz, nx, ny, nz, 1f, 0f });
+                vertexList.AddRange(new List<float> { ax, ay, az, nx, ny, nz, texa_x, texa_y });
+                vertexList.AddRange(new List<float> { bx, by, bz, nx, ny, nz, texb_x, texb_y });
+                vertexList.AddRange(new List<float> { cx, cy, cz, nx, ny, nz, texc_x, texc_y });
             }
-            
-            vertices = ApplyContractionMappings(vertexList.ToArray());
+
+            vertices = vertexList.ToArray();
             vertices = ApplyContractionMappings(vertices);
             vertices = ApplyContractionMappings(vertices);
-            //vertices = ApplyContractionMappings(vertices);
+            vertices = ApplyContractionMappings(vertices);
 
 
             faceIndexes = new uint[vertices.Length];

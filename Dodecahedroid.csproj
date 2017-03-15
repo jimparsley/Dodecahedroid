@@ -68,7 +68,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-nodpi\texture1.png" />
+    <AndroidResource Include="Resources\drawable-nodpi\texture_old.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -78,7 +78,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-nodpi\texture1.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shader.fsh">
       <LogicalName>Mono.Samples.TexturedCube.Resources.Shader.fsh</LogicalName>

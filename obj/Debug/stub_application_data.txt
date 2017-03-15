@@ -1,2 +1,2 @@
 android.app.Application
-mono.samples.texturedcube
+dodecahedroid.dodecahedroid
