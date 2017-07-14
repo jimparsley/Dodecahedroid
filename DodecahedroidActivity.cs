@@ -9,8 +9,8 @@ using Android.Content.PM;
 
 namespace Dodecahedroid
 {
-	[Activity (Label = "@string/app_name", MainLauncher = true, Icon = "@drawable/app_texturedcube",
-		ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden, LaunchMode = LaunchMode.SingleTask)]
+	[Activity (Label = "@string/app_name",
+		ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden)]
 	public class DodecahedroidActivity : Activity
 	{
 		protected override void OnCreate (Bundle savedInstanceState)

@@ -7,10 +7,10 @@ namespace Dodecahedroid
 	public class DodecahedronModel
 	{
 
-        static DodecahedronModel()
-        {
-            ComputeVertices();
-        }
+        //static DodecahedronModel()
+        //{
+        //    ComputeVertices();
+        //}
 
         private readonly static float GOLDEN_RATIO = 1.618f;
 
@@ -228,7 +228,7 @@ namespace Dodecahedroid
             {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -0.618f, 1.902f, -0.3819f }
         };
 
-        private static void ComputeVertices()
+        public static void ComputeVertices()
         {
             List<float> vertexList = new List<float>();
 
