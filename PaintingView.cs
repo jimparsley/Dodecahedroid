@@ -15,11 +15,14 @@ namespace Dodecahedroid {
 
 	class PaintingView : AndroidGameView
 	{
-		float prevX, prevY;
-		float downX, downY;
-		bool setViewport = true;
+		private float prevX, prevY;
+        private float downX, downY;
+        private bool setViewport = true;
 
-		Dodecahedron cube = new Dodecahedron ();
+        private bool touch = false;
+        private bool touchDown = false;
+
+        private Dodecahedron dodecahedron = new Dodecahedron();
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -38,7 +41,7 @@ namespace Dodecahedroid {
 			AutoSetContextOnRenderFrame = false;
 			RenderOnUIThread = false;
 			Resize += delegate {
-				cube.SetupProjection (Width, Height);
+				dodecahedron.SetupProjection (Width, Height);
 				setViewport = true;
 			};
 		}
@@ -127,8 +130,8 @@ namespace Dodecahedroid {
 		{
 			base.OnContextSet (e);
 			Console.WriteLine ("OpenGL version: {0} GLSL version: {1}", GL.GetString (StringName.Version), GL.GetString (StringName.ShadingLanguageVersion));
-			cube.Initialize ();
-			cube.LoadTexture (LoadBitmapData);
+			dodecahedron.Initialize ();
+			dodecahedron.LoadTexture (LoadBitmapData);
 		}
 
 		protected override void OnRenderThreadExited (EventArgs e)
@@ -146,20 +149,11 @@ namespace Dodecahedroid {
 
 		protected override void OnLoad (EventArgs e)
 		{
-			cube.SetupProjection (Width, Height);
+			dodecahedron.SetupProjection (Width, Height);
 
 			Run (60);
 		}
-
-		void Render ()
-		{
-			cube.Render ();
-			SwapBuffers ();
-		}
-
-		bool touch = false;
-		bool touchDown = false;
-
+        
 		public override bool OnTouchEvent (MotionEvent e)
 		{
 			base.OnTouchEvent (e);
@@ -177,15 +171,15 @@ namespace Dodecahedroid {
 				prevX = eX;
 				prevY = eY;
 
-				cube.Move (xDiff, yDiff);
+				dodecahedron.Move (xDiff, yDiff);
 			}
 			if (System.Math.Abs (downX - e.GetX ()) > 5 || System.Math.Abs (downY - e.GetY ()) > 5)
 				touch = false;
 			if (e.Action == MotionEventActions.Move)
-				cube.SetupProjection (Width, Height);
+				dodecahedron.SetupProjection (Width, Height);
 			else if (e.Action == MotionEventActions.Up) {
 				if (touch)
-					cube.ToggleTexture ();
+					dodecahedron.ToggleTexture ();
 				touchDown = false;
 			}
 
@@ -196,19 +190,19 @@ namespace Dodecahedroid {
 		{
 			base.OnRenderFrame (e);
 			if (!touchDown)
-				cube.UpdateWorld ();
+				dodecahedron.UpdateWorld ();
 			if (setViewport) {
 				setViewport = false;
 				GL.Viewport (0, 0, Width, Height);
 			}
-			cube.Render ();
+			dodecahedron.Render ();
 			SwapBuffers ();
 		}
 
 		protected override void Dispose (bool disposing)
 		{
 			base.Dispose (disposing);
-			cube.DeleteTexture ();
+			dodecahedron.DeleteTexture ();
 		}
 	}
 }

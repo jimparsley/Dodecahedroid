@@ -6,31 +6,35 @@ namespace Dodecahedroid
 {
 	public class Dodecahedron
 	{
-		public float xAngle = 45, yAngle = 45;
-		public float xAcc, yAcc;
-		public float xSign = 1, ySign = 1;
-		float xInc = .01f, yInc = .0033f;
-		bool UseTexture;
-		int Width, Height;
-		int textureId;
-		int programTexture, programPlain, currentProgram;
+		private float xAngle = 45, yAngle = 45;
+        private float xAcc, yAcc;
+        private float xSign = 1, ySign = 1;
+        private float xInc = .01f, yInc = .0033f;
+        private bool UseTexture;
+        private int Width, Height;
+        private int textureId;
+        private int programTexture, programPlain, currentProgram;
 
-		const int UNIFORM_PROJECTION = 0;
-		const int UNIFORM_TEXTURE = 1;
-		const int UNIFORM_TEX_DEPTH = 2;
-		const int UNIFORM_LIGHT = 3;
-		const int UNIFORM_VIEW = 4;
-		const int UNIFORM_NORMAL_MATRIX = 5;
-		const int UNIFORM_COUNT = 6;
-		int[] uniforms = new int [UNIFORM_COUNT];
-		const int ATTRIB_VERTEX = 0;
-		const int ATTRIB_NORMAL = 1;
-		const int ATTRIB_TEXCOORD = 2;
+        private const int UNIFORM_PROJECTION = 0;
+        private const int UNIFORM_TEXTURE = 1;
+        private const int UNIFORM_TEX_DEPTH = 2;
+        private const int UNIFORM_LIGHT = 3;
+        private const int UNIFORM_VIEW = 4;
+        private const int UNIFORM_NORMAL_MATRIX = 5;
+        private const int UNIFORM_COUNT = 6;
+        private int[] uniforms = new int [UNIFORM_COUNT];
+        private const int ATTRIB_VERTEX = 0;
+        private const int ATTRIB_NORMAL = 1;
+        private const int ATTRIB_TEXCOORD = 2;
 
-		const int ATTRIB_COUNT = 3;
-		int vbo, vbi;
+        private const int ATTRIB_COUNT = 3;
+        private int vbo, vbi;
 
-		internal void Initialize ()
+        private Matrix4 view = new Matrix4();
+        private Matrix4 normalMatrix = new Matrix4();
+        private Matrix4 projection = new Matrix4();
+
+        public void Initialize ()
 		{
 			GL.ClearColor (0, 0, 0, 1);
 
@@ -49,7 +53,7 @@ namespace Dodecahedroid
 			Render ();
 		}
 
-		internal void DeleteTexture ()
+		public void DeleteTexture ()
 		{
 			GL.DeleteTexture (textureId);
 		}
@@ -70,12 +74,12 @@ namespace Dodecahedroid
 			DrawModel ();
 		}
 
-		string LoadResource (string name)
+        private string LoadResource (string name)
 		{
 			return new System.IO.StreamReader (System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream (name)).ReadToEnd ();
 		}
 
-		public void InitModel ()
+        private void InitModel ()
 		{
 			GL.GenBuffers (1, out vbo);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, vbo);
@@ -88,7 +92,7 @@ namespace Dodecahedroid
 			GL.BindBuffer (BufferTarget.ElementArrayBuffer, 0);
 		}
 
-		internal void DrawModel ()
+        private void DrawModel ()
 		{
 			GL.ActiveTexture (TextureUnit.Texture0);
 			GL.BindTexture (TextureTarget.Texture2D, textureId);
@@ -117,7 +121,6 @@ namespace Dodecahedroid
 		public delegate void LoadBitmapData (int texId);
 		public void LoadTexture (LoadBitmapData loadBitmapData)
 		{
-            
 			GL.BindTexture (TextureTarget.Texture2D, textureId);
 
 			// setup texture parameters
@@ -130,12 +133,8 @@ namespace Dodecahedroid
 
 			GL.GenerateMipmap (TextureTarget.Texture2D);
 		}
-
-		Matrix4 view = new Matrix4 ();
-		Matrix4 normalMatrix = new Matrix4 ();
-		Matrix4 projection = new Matrix4 ();
-
-		internal void SetupProjection (int width, int height)
+        
+		public void SetupProjection (int width, int height)
 		{
 			Matrix4 model = Matrix4.Mult (Matrix4.CreateRotationX (-xAngle), Matrix4.CreateRotationZ (-yAngle));
 
@@ -163,7 +162,7 @@ namespace Dodecahedroid
 			currentProgram = UseTexture ? programTexture : programPlain;
 		}
 
-		bool LoadShaders (string vertShaderSource, string fragShaderSource, out int program)
+		private bool LoadShaders (string vertShaderSource, string fragShaderSource, out int program)
 		{
 			int vertShader, fragShader;
 
@@ -233,19 +232,7 @@ namespace Dodecahedroid
 			return true;
 		}
 
-		internal void DestroyShaders ()
-		{
-			if (programTexture != 0) {
-				GL.DeleteProgram (programTexture);
-				programTexture = 0;
-			}
-			if (programPlain != 0) {
-				GL.DeleteProgram (programPlain);
-				programPlain = 0;
-			}
-		}
-
-		static bool CompileShader (ShaderType type, string src, out int shader)
+        private static bool CompileShader (ShaderType type, string src, out int shader)
 		{
 			shader = GL.CreateShader (type);
 			GL.ShaderSource (shader, src);
@@ -269,7 +256,7 @@ namespace Dodecahedroid
 			return true;
 		}
 
-		static bool LinkProgram (int prog)
+        private static bool LinkProgram (int prog)
 		{
 			GL.LinkProgram (prog);
 
@@ -286,38 +273,7 @@ namespace Dodecahedroid
 
 			return true;
 		}
-
-		static void CheckGLError ()
-		{
-			ErrorCode code = GL.GetErrorCode ();
-			if (code != ErrorCode.NoError) {
-				Console.WriteLine ("GL Error {0}", code);
-			}
-		}
-
-		static bool ValidateProgram (int prog)
-		{
-			GL.ValidateProgram (prog);
-			CheckGLError ();
-
-			int logLength = 0;
-			GL.GetProgram (prog, ProgramParameter.InfoLogLength, out logLength);
-			CheckGLError ();
-			if (logLength > 0) {
-				var infoLog = new System.Text.StringBuilder (logLength);
-				GL.GetProgramInfoLog (prog, logLength, out logLength, infoLog);
-				Console.WriteLine ("Program validate log:\n{0}", infoLog);
-			}
-
-			int status = 0;
-			GL.GetProgram (prog, ProgramParameter.LinkStatus, out status);
-			CheckGLError ();
-			if (status == 0)
-				return false;
-
-			return true;
-		}
-
+        
 		public void UpdateWorld ()
 		{
 			xAngle += xSign * (xInc + xAcc * xAcc);

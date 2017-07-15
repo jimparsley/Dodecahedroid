@@ -7,7 +7,7 @@ namespace Dodecahedroid
 {
     public class DodecahedronModel
     {
-        private readonly static float GOLDEN_RATIO = (float)((1 + Math.Sqrt(5)) / 2);  // = 1.618f;
+        private static readonly float GOLDEN_RATIO = (float)((1 + Math.Sqrt(5)) / 2);  // = 1.618f;
 
         // explicit vertices from http://mathworld.wolfram.com/RegularDodecahedron.html
         // 2*Math.Cos(2*0*Math.PI/5) = 2*Math.Cos(0) = 2 = 1.236*GOLDEN_RATIO
