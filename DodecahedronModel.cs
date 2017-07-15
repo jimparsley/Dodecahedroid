@@ -141,7 +141,17 @@ namespace Dodecahedroid
             8, 10, 15,
             8, 16, 11
         };
-        
+
+        // The texture used is a square image of a sierpinski pentagon on a black background.
+        // The texture coordinates divide up the sierpinski pentagon into 3 triangles.
+        // These will be mapped onto the triangles that comprise the model to be rendered.
+        private static float[,] texCoords = new float[3, 6]
+            {
+                {1 - 0.7847f, 1 - 0.0639f, 1 - 0.5f, 1 - 0.9375f, 1 - 0.2167f, 1 - 0.0639f },
+                {1 - 0.7847f, 1 - 0.0639f, 1 - 0.9597f, 1 - 0.6056f, 1 - 0.5f, 1 - 0.9375f },
+                {1 - 0.2167f, 1 - 0.0639f, 1 - 0.5f, 1 - 0.9375f, 1 - 0.0417f, 1 - 0.6056f }
+            };
+
 
         // we pick a scale factor so that in the corresponding 2 dimensional sierpinski pentagon,
         // the scaled pentagons are just touching each other. This scale factor also gives a pleasing
@@ -260,92 +270,56 @@ namespace Dodecahedroid
                 float nz = (ux * vy) - (uy * vx);
 
                 // get the texture coordinates
-                // todo: lookup table
                 float texa_x, texa_y, texb_x, texb_y, texc_x, texc_y;
-                switch (pentagonSegment)
-                {
-                    case 0:
-                        texa_x = 1 - 0.7847f;
-                        texa_y = 1 - 0.0639f;
-                        texb_x = 1 - 0.5f;
-                        texb_y = 1 - 0.9375f;
-                        texc_x = 1 - 0.2167f;
-                        texc_y = 1 - 0.0639f;
-                        pentagonSegment = 1;
-                        break;
 
-                    case 1:
-                        texa_x = 1 - 0.7847f;
-                        texa_y = 1 - 0.0639f;
-                        texb_x = 1 - 0.9597f;
-                        texb_y = 1 - 0.6056f;
-                        texc_x = 1 - 0.5f;
-                        texc_y = 1 - 0.9375f;
-                        pentagonSegment = 2;
-                        break;
+                texa_x = texCoords[pentagonSegment, 0];
+                texa_y = texCoords[pentagonSegment, 1];
+                texb_x = texCoords[pentagonSegment, 2];
+                texb_y = texCoords[pentagonSegment, 3];
+                texc_x = texCoords[pentagonSegment, 4];
+                texc_y = texCoords[pentagonSegment, 5];
 
-                    case 2:
-                        texa_x = 1 - 0.2167f;
-                        texa_y = 1 - 0.0639f;
-                        texb_x = 1 - 0.5f;
-                        texb_y = 1 - 0.9375f;
-                        texc_x = 1 - 0.0417f;
-                        texc_y = 1 - 0.6056f;
-                        pentagonSegment = 0;
-                        break;
-
-                    default:
-                        texa_x = 1 - 0.7847f;
-                        texa_y = 1 - 0.0639f;
-                        texb_x = 1 - 0.5f;
-                        texb_y = 1 - 0.9375f;
-                        texc_x = 1 - 0.2167f;
-                        texc_y = 1 - 0.0639f;
-                        pentagonSegment = 1;
-                        break;
-                }
+                pentagonSegment = pentagonSegment >= 2 ? 0 : pentagonSegment + 1;
 
                 // append vertices, normals and texcoords to list
                 vertexList.AddRange(new List<float> { ax, ay, az, nx, ny, nz, texa_x, texa_y });
                 vertexList.AddRange(new List<float> { bx, by, bz, nx, ny, nz, texb_x, texb_y });
                 vertexList.AddRange(new List<float> { cx, cy, cz, nx, ny, nz, texc_x, texc_y });
             }
-
-            vertices = vertexList.ToArray();
-            vertices = ApplyContractionMappings(vertices, 3);
-
-
-            faceIndexes = new uint[vertices.Length];
-            for (uint i = 0; i < faceIndexes.Length; i++)
+            
+            Vertices = ApplyContractionMappings(vertexList.ToArray(), 3);
+            
+            FaceIndexes = new uint[Vertices.Length];
+            for (uint i = 0; i < FaceIndexes.Length; i++)
             {
-                faceIndexes[i] = i;
+                FaceIndexes[i] = i;
             }
         }
-
+        
         private static float[] ApplyContractionMappings(float[] vertices, int iterations)
         {
             List<float> vertexList = new List<float>();
             
             for (int m = 0; m < contractionMappings.GetLength(0); m++)
             {
+                float a = contractionMappings[m][0];
+                float b = contractionMappings[m][1];
+                float c = contractionMappings[m][2];
+                float d = contractionMappings[m][3];
+                float e = contractionMappings[m][4];
+                float f = contractionMappings[m][5];
+                float g = contractionMappings[m][6];
+                float h = contractionMappings[m][7];
+                float i = contractionMappings[m][8];
+                float j = contractionMappings[m][9];
+                float k = contractionMappings[m][10];
+                float l = contractionMappings[m][11];
+                
                 for (int n = 0; n < vertices.Length; n += 8)
                 {
                     float x = vertices[n];
                     float y = vertices[n + 1];
                     float z = vertices[n + 2];
-
-                    float a = contractionMappings[m][0];
-                    float b = contractionMappings[m][1];
-                    float c = contractionMappings[m][2];
-                    float d = contractionMappings[m][3];
-                    float e = contractionMappings[m][4];
-                    float f = contractionMappings[m][5];
-                    float g = contractionMappings[m][6];
-                    float h = contractionMappings[m][7];
-                    float i = contractionMappings[m][8];
-                    float j = contractionMappings[m][9];
-                    float k = contractionMappings[m][10];
-                    float l = contractionMappings[m][11];
 
                     float xdash = a * x + b * y + c * z + j;
                     float ydash = d * x + e * y + f * z + k;
@@ -358,7 +332,7 @@ namespace Dodecahedroid
             return iterations > 1 ? ApplyContractionMappings(vertexArray, iterations - 1) : vertexArray;
         }
 
-        internal static float[] vertices;
-        internal static uint[] faceIndexes;
+        public static float[] Vertices { get; private set; }
+        public static uint[] FaceIndexes { get; private set; }
     }
 }

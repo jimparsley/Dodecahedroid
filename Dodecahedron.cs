@@ -79,12 +79,12 @@ namespace Dodecahedroid
 		{
 			GL.GenBuffers (1, out vbo);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, vbo);
-			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)(DodecahedronModel.vertices.Length * sizeof(float)), DodecahedronModel.vertices, BufferUsage.StaticDraw);
+			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)(DodecahedronModel.Vertices.Length * sizeof(float)), DodecahedronModel.Vertices, BufferUsage.StaticDraw);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, 0);
 
 			GL.GenBuffers (1, out vbi);
 			GL.BindBuffer (BufferTarget.ElementArrayBuffer, vbi);
-			GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)(DodecahedronModel.faceIndexes.Length * sizeof(uint)), DodecahedronModel.faceIndexes, BufferUsage.StaticDraw);
+			GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)(DodecahedronModel.FaceIndexes.Length * sizeof(uint)), DodecahedronModel.FaceIndexes, BufferUsage.StaticDraw);
 			GL.BindBuffer (BufferTarget.ElementArrayBuffer, 0);
 		}
 
@@ -106,7 +106,7 @@ namespace Dodecahedroid
             GL.EnableVertexAttribArray (ATTRIB_TEXCOORD);
 
             GL.BindBuffer (BufferTarget.ElementArrayBuffer, vbi);
-			GL.DrawElements (BeginMode.Triangles, DodecahedronModel.faceIndexes.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+			GL.DrawElements (BeginMode.Triangles, DodecahedronModel.FaceIndexes.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             
             //GL.DrawArrays(BeginMode., 0, CubeModel.vertices.Length);
 
