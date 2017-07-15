@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dodecahedroid
 {
@@ -140,42 +141,47 @@ namespace Dodecahedroid
             8, 10, 15,
             8, 16, 11
         };
+        
 
-        private static float[,] contractionMappings = new float[20, 12]
+        // we pick a scale factor so that in the corresponding 2 dimensional sierpinski pentagon,
+        // the scaled pentagons are just touching each other. This scale factor also gives a pleasing
+        // appearance for the sierpinski dodecahedron.
+        private static float scaleFactor = 1/(1+GOLDEN_RATIO); // = 0.382
+
+        private static float[][] contractionMappings = BuildContractionMappings(explicitDodecahedronVertices);
+
+        private static float[][] BuildContractionMappings(float[] vertices)
         {
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 1.236f, 0.0f, 1.618f },
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.382f, 1.1754f, 1.618f },
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -1.0f, 0.7263f, 1.618f },
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -1.0f, -0.7263f, 1.618f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.382f, -1.1754f, 1.618f},
+            float[][] cm = new float[20][];
 
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -1.236f, 0.0f, -1.618f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -0.382f, -1.1754f, -1.618f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 1.0f, -0.7263f, -1.618f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 1.0f, 0.7263f, -1.618f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -0.382f, 1.1754f, -1.618f},
+            for (int i = 0; i < cm.Length; i++)
+            {
+                float x = vertices[i * 3];
+                float y = vertices[1 + i * 3];
+                float z = vertices[2 + i * 3];
 
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 2.0f, 0.0f, 0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.618f, 1.902f, 0.3819f},
-            {0.388f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -1.6179f, 1.1755f, 0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -1.6179f, -1.1755f, 0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.618f, -1.902f, 0.3819f},
+                cm[i] = new float[] {
+                    scaleFactor,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    scaleFactor,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    scaleFactor,
+                    x - scaleFactor*x,
+                    y - scaleFactor*y,
+                    z - scaleFactor*z };
+            }
 
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -2f, 0.0f, -0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -0.618f, -1.9020f, -0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 1.6179f, -1.1755f, -0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 1.6179f, 1.1755f, -0.3819f},
-            {0.382f, 0.0f, 0.0f, 0.0f, 0.382f, 0.0f, 0.0f, 0.0f, 0.382f, -0.618f, 1.902f, -0.3819f }
-        };
+            return cm;
+        }
 
         public static void ComputeVertices()
         {
             List<float> vertexList = new List<float>();
-
-            //float factor = 1f / (1f - 0.382f);
-            //float factor = 1.618f;
-            //float factor = 1f;
-
+            
             int pentagonSegment = 0;
 
             for (int i = 0; i < dodecahedronFaceIndexes.Length; i += 3)
@@ -277,7 +283,7 @@ namespace Dodecahedroid
         private static float[] ApplyContractionMappings(float[] vertices, int iterations)
         {
             List<float> vertexList = new List<float>();
-
+            
             for (int m = 0; m < contractionMappings.GetLength(0); m++)
             {
                 for (int n = 0; n < vertices.Length; n += 8)
@@ -286,18 +292,18 @@ namespace Dodecahedroid
                     float y = vertices[n + 1];
                     float z = vertices[n + 2];
 
-                    float a = contractionMappings[m, 0];
-                    float b = contractionMappings[m, 1];
-                    float c = contractionMappings[m, 2];
-                    float d = contractionMappings[m, 3];
-                    float e = contractionMappings[m, 4];
-                    float f = contractionMappings[m, 5];
-                    float g = contractionMappings[m, 6];
-                    float h = contractionMappings[m, 7];
-                    float i = contractionMappings[m, 8];
-                    float j = contractionMappings[m, 9];
-                    float k = contractionMappings[m, 10];
-                    float l = contractionMappings[m, 11];
+                    float a = contractionMappings[m][0];
+                    float b = contractionMappings[m][1];
+                    float c = contractionMappings[m][2];
+                    float d = contractionMappings[m][3];
+                    float e = contractionMappings[m][4];
+                    float f = contractionMappings[m][5];
+                    float g = contractionMappings[m][6];
+                    float h = contractionMappings[m][7];
+                    float i = contractionMappings[m][8];
+                    float j = contractionMappings[m][9];
+                    float k = contractionMappings[m][10];
+                    float l = contractionMappings[m][11];
 
                     float xdash = a * x + b * y + c * z + j;
                     float ydash = d * x + e * y + f * z + k;
