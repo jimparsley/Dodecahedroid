@@ -150,6 +150,49 @@ namespace Dodecahedroid
 
         private static float[][] contractionMappings = BuildContractionMappings(explicitDodecahedronVertices);
 
+        // As can be seen below, a contraction mapping is a set of coefficients
+        // { a, b, c, d, e, f, g, h, i, j, k, l }
+        // that maps a point { x, y, z } to a new point { xdash, ydash, zdash } thus:
+        // 
+        // xdash = ax + by + cz + j
+        // ydash = dx + ey + fz + k
+        // zdash = gx + hy + iz + l
+        //
+        // The contraction mappings here are just scales and translations.
+        // The first 6 coefficients define the scaling, and the last 3 define the translation.
+        //
+        // The translation is derived as follows.
+        // Each contraction mapping effectively shrinks the whole dodecahedron using the scale factor,
+        // then translates it so that it "fits into" one of the vertices of the dodecahedron.
+        // This means that each vertex has a corresponding contraction mapping.
+        // For that vertex, the corresponding contraction mapping maps the vertex to itself, ie
+        // { xdash, ydash, zdash } = { x, y, z }
+        //
+        // So we have the equations
+        //
+        // xdash = ax + by + cz + j
+        // ydash = dx + ey + fz + k
+        // zdash = gx + hy + iz + l
+        //
+        // we can substitute in coefficients from the scale
+        //
+        // xdash = scaleFactor*x + 0*y + 0*z + j 
+        // ydash = 0*x + scaleFactor*y + 0*z + k
+        // zdash = 0*x + 0*y + scaleFactor*z + l
+        //
+        // So
+        //
+        // xdash = scaleFactor*x + j 
+        // ydash = scaleFactor*y + k
+        // zdash = scaleFactor*z + l
+        //
+        // rearranging gives
+        //
+        // j = xdash - scaleFactor*x
+        // k = xdash - scaleFactor*y
+        // l = xdash - scaleFactor*z
+        //
+        // as seen below.
         private static float[][] BuildContractionMappings(float[] vertices)
         {
             float[][] cm = new float[20][];
@@ -186,7 +229,6 @@ namespace Dodecahedroid
 
             for (int i = 0; i < dodecahedronFaceIndexes.Length; i += 3)
             {
-
                 int i1 = dodecahedronFaceIndexes[i] * 3;
                 int i2 = dodecahedronFaceIndexes[i + 1] * 3;
                 int i3 = dodecahedronFaceIndexes[i + 2] * 3;
